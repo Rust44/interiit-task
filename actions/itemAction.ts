@@ -1,5 +1,6 @@
 "use server";
 import Item from "@/models/Item";
+import Godown from "@/models/Godown";
 
 type FormData = {
   name: string;
@@ -16,8 +17,25 @@ type FormData = {
   }[];
 };
 
+export const getItemByGodownId = async (godownId: string) => {
+  try {
+    const items = await Item.find({ godown_id: godownId });
+    
+    return items;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+};
+
 export const createNewItem = async (formData: FormData) => {
   try {
+    const godown = await Godown.findById(formData.godown_id);
+    
+    if (!godown) {
+      return "Godown not found";
+    }
+    
     const itemExists = await Item.findOne({
       name: formData.name,
       godown_id: formData.godown_id,
@@ -26,6 +44,8 @@ export const createNewItem = async (formData: FormData) => {
     if (itemExists) {
       return "Item already exists";
     }
+    
+    
 
     const { attributes, ...restFormData } = formData;
 
@@ -53,7 +73,14 @@ export const createNewItem = async (formData: FormData) => {
     });
 
     await item.save();
-
+    
+    godown.items.push({
+      id: item._id,
+      name: item.name,
+    });
+    
+    await godown.save();
+    
     return "success";
   } catch (error) {
     console.log(error);
