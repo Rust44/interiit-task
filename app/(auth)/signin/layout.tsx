@@ -38,7 +38,7 @@ export default function AuthLayout({
         </button>
       </form>
 
-      <form action={handleLinkedInSingIn}>
+      <form action={handleGithubSingIn}>
         <button
           type="submit"
           className="flex items-center justify-center w-full bg-white text-gray-500 md:shadow p-3 border-1 rounded-l space-x-2  font-semibold transition-all duration-300 hover:shadow-sm hover:transform hover:scale-[1.02] text-lg"
@@ -50,7 +50,7 @@ export default function AuthLayout({
             height={100}
             className="w-6 h-6"
           />
-          <span className="text-gray-600 font-bold">Login with LinkedIn</span>
+          <span className="text-gray-600 font-bold">Login with Github</span>
         </button>
       </form>
 

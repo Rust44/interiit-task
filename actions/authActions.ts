@@ -120,7 +120,7 @@ export async function handleGoogleSignIn() {
 }
 
 export async function handleLinkedInSingIn() {
-  await signIn("linkedin", { callbackUrl: "/" });
+  await signIn("github", { callbackUrl: "/" });
 }
 
 export async function handleSignOut() {
