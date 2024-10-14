@@ -1,10 +1,10 @@
 import Image from "next/image";
 import {
   handleGoogleSignIn,
-  handleLinkedInSingIn,
+  // handleLinkedInSingIn,
 } from "@/actions/authActions";
 import Link from "next/link"
-
+// import { Github } from "lucide-react";
 
 export default function AuthLayout({
   children,
@@ -39,21 +39,15 @@ export default function AuthLayout({
         </button>
       </form>
 
-      <form action={handleLinkedInSingIn}>
+      {/* <form action={handleLinkedInSingIn}>
         <button
           type="submit"
           className="flex items-center justify-center w-full bg-white text-gray-500 md:shadow p-3 border-1 rounded-l space-x-2  font-semibold transition-all duration-300 hover:shadow-sm hover:transform hover:scale-[1.02] text-lg"
         >
-          <Image
-            src={"/auth/linkedin.svg"}
-            alt="Google"
-            width={100}
-            height={100}
-            className="w-6 h-6"
-          />
+          <Github />
           <span className="text-gray-600 font-bold">Login with Github</span>
         </button>
-      </form>
+      </form> */}
 
       <div className="flex items-center justify-center my-4">
         <div className="w-1/3 border-b border-gray-300 mr-4"></div>
