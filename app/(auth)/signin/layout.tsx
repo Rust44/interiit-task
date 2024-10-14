@@ -5,6 +5,7 @@ import {
 } from "@/actions/authActions";
 import Link from "next/link"
 
+
 export default function AuthLayout({
   children,
 }: {
@@ -38,7 +39,7 @@ export default function AuthLayout({
         </button>
       </form>
 
-      <form action={handleGithubSingIn}>
+      <form action={handleLinkedInSingIn}>
         <button
           type="submit"
           className="flex items-center justify-center w-full bg-white text-gray-500 md:shadow p-3 border-1 rounded-l space-x-2  font-semibold transition-all duration-300 hover:shadow-sm hover:transform hover:scale-[1.02] text-lg"
