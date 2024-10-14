@@ -27,7 +27,7 @@ export const itemSchema = object({
     object({
       key: string(),
       value: string(),
-    })
+    }),
   ).optional(),
 });
 
@@ -36,4 +36,19 @@ export const godownSchema = object({
     .min(2, "Name must be at least 2 characters")
     .max(32, "Name must be at most 32 characters"),
   parent_godown: string().optional(),
+});
+
+export const contactSchema = object({
+  firstName: string({ required_error: "First name is required" })
+    .min(2, "First name must be at least 2 characters")
+    .max(32, "First name must be at most 32 characters"),
+  lastName: string({ required_error: "Last name is required" })
+    .min(2, "Last name must be at least 2 characters")
+    .max(32, "Last name must be at most 32 characters"),
+  email: string({ required_error: "Email is required" }).email(
+    "Email must be a valid email address",
+  ),
+  message: string({ required_error: "Message is required" })
+    .min(2, "Message must be at least 2 characters")
+    .max(1000, "Message must be at most 1000 characters"),
 });

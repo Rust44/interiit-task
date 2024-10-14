@@ -86,7 +86,7 @@ const GroupGodowns = ({
               <AccordionTrigger className="py-2">
                 <Warehouse className="h-3 w-3 mr-2 flex-shrink-0" />
                 <Link
-                  href={`/${godown._id}`}
+                  href={`/godown/${godown._id}`}
                   aria-disabled={godown.items?.length ? true : false}
                   className="truncate w-full text-left"
                 >
