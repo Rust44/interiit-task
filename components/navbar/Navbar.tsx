@@ -43,7 +43,7 @@ export default function Navbar() {
             <Button
               variant="ghost"
               size="icon"
-              className="mr-2"
+              className="mx-2"
               aria-label="Notifications"
             >
               <Bell className="h-5 w-5" />

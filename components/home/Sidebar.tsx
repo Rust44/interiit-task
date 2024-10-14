@@ -4,61 +4,89 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Warehouse } from "lucide-react";
 import Link from "next/link";
 
+type Item = {
+  _id: string;
+  name: string;
+  id: number;
+};
+
 type groupGodownType = {
   _id: string;
   name: string;
   parent_godown: string | null;
-  children?: groupGodownType[];
+  items?: Item[] | undefined;
+  children: groupGodownType[];
 };
 
 type Godown = {
   _id: string;
   name: string;
   parent_godown: string | null;
+  items?: Item[] | undefined;
+};
+
+const findAndAddGodown = (
+  godown: Godown,
+  newGroupedGodowns: groupGodownType[],
+) => {
+  for (let i = 0; i < newGroupedGodowns.length; i++) {
+    if (godown.parent_godown === newGroupedGodowns[i]._id) {
+      newGroupedGodowns[i].children?.push({
+        _id: godown._id,
+        name: godown.name,
+        parent_godown: godown.parent_godown,
+        items: godown.items,
+        children: [],
+      });
+      return;
+    } else if (newGroupedGodowns[i].children?.length > 0) {
+      findAndAddGodown(godown, newGroupedGodowns[i].children);
+    }
+  }
+};
+
+const getGroupedGodown = (godowns: Godown[]) => {
+  const newGroupedGodowns: groupGodownType[] = [];
+
+  for (let i = 0; i < godowns.length; i++) {
+    const godown = godowns[i];
+    if (godown.parent_godown === null) {
+      newGroupedGodowns.push({
+        _id: godown._id,
+        name: godown.name,
+        parent_godown: godown.parent_godown,
+        items: godown.items,
+        children: [],
+      });
+    } else {
+      findAndAddGodown(godown, newGroupedGodowns);
+    }
+  }
+
+  return newGroupedGodowns;
 };
 
 export default function Sidebar() {
   const [godowns, setGodowns] = useState<Godown[]>([]);
 
   const [groupedGodowns, setGroupedGodowns] = useState<Godown[]>([]);
-
+  
   const groupGodown = useCallback(() => {
-    const groupGodowns: groupGodownType[] = [];
-
-    godowns.forEach((godown) => {
-      if (godown.parent_godown === null) {
-        groupGodowns.push(godown);
-      }
-    });
-
-    godowns.forEach((godown) => {
-      if (godown.parent_godown !== null) {
-        const parentGodown = groupGodowns.find(
-          (g) => g._id === godown.parent_godown,
-        );
-        if (parentGodown) {
-          if (!parentGodown.children) {
-            parentGodown.children = [];
-          }
-          parentGodown.children.push(godown);
-        }
-      }
-    });
-
-    console.log("grouped godown ", groupGodowns);
-
-    setGroupedGodowns(groupedGodowns);
-  }, [godowns]);
-
-  useEffect(() => {
-    groupGodown();
-  }, [godowns, groupGodown]);
+      setGroupedGodowns(getGroupedGodown(godowns));
+    }, [godowns]);
 
   const [selectedGodownId, setSelectedGodownId] = useState<string | null>(null);
 
   const onSelectGodown = (godown: Godown) => {
     setSelectedGodownId(godown._id);
   };
+  
+  console.log("godowns ", godowns);
+  console.log("groupedGodowns ", groupedGodowns);
+
+  useEffect(() => {
+    groupGodown();
+  }, [godowns, groupGodown]);
 
   useEffect(() => {
     try {
