@@ -1,4 +1,4 @@
-import { object, array, string, boolean, number, union } from "zod";
+import { object, array, string } from "zod";
 
 export const itemSchema = object({
   name: string({ required_error: "Name is required" })
@@ -26,11 +26,7 @@ export const itemSchema = object({
   attributes: array(
     object({
       key: string(),
-      value: union([
-        string(),
-        number(),
-        boolean(),
-      ])
+      value: string(),
     })
   ).optional(),
 });
@@ -39,5 +35,5 @@ export const godownSchema = object({
   name: string({ required_error: "Name is required" })
     .min(2, "Name must be at least 2 characters")
     .max(32, "Name must be at most 32 characters"),
-  parentGodown: string().optional(),
+  parent_godown: string().optional(),
 });

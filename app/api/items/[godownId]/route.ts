@@ -8,6 +8,6 @@ export async function GET(req: Request, { params }: { params: { godownId: string
     return NextResponse.json(items);
   } catch (error) {
     console.log(error);
-    return [];
+    return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
   }
 }

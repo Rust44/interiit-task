@@ -3,7 +3,6 @@ import ItemCard from "@/components/home/ItemCard";
 import { Card, CardContent } from "@/components/ui/card";
 import { useState, useEffect, useCallback } from "react";
 import { Inbox } from "lucide-react";
-import { toast } from "sonner";
 
 type Item = {
   _id: string;

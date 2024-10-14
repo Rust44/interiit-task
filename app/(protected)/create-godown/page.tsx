@@ -41,7 +41,9 @@ export default function CreateGodown() {
   });
 
   const onSubmit = async (data: z.infer<typeof godownSchema>) => {
-    const response = await createNewGodown(data.name, data.parentGodown);
+    const response = await createNewGodown(data);
+    
+    console.log(data)
     
     if (response !== "success") {
       toast.error(response);
@@ -84,7 +86,7 @@ export default function CreateGodown() {
 
               <FormField
                 control={form.control}
-                name="parentGodown"
+                name="parent_godown"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Parent Godown</FormLabel>
@@ -111,7 +113,7 @@ export default function CreateGodown() {
               />
 
               <LoadingButton
-                text="Create Item"
+                text="Create Godown"
                 isLoading={form.formState.isSubmitting}
               />
             </form>

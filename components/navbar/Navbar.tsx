@@ -37,6 +37,15 @@ export default function Navbar() {
               </span>
             </div>
           </Link>
+          
+          <div className="flex items-center">
+            <Link href="/create-godown">
+              <div className="text-primary hover:text-primary">Add Godown</div>
+            </Link>
+            <Link href="/create-item">
+              <div className="ml-4 text-primary hover:text-primary">Add Item</div>
+            </Link>
+          </div>
 
           <div className="flex items-center">
             <ModeToggle />

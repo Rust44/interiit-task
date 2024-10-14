@@ -125,7 +125,7 @@ export default function CreateItem() {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Input type="text" placeholder="Price" {...field} />
+                      <Input type="number" placeholder="Price" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

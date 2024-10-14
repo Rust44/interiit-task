@@ -77,7 +77,6 @@ const GroupGodowns = ({
 }: {
   groupedGodowns: groupGodownType[];
 }) => {
-  
   return (
     <>
       <Accordion type="multiple" className="text-xs ">
@@ -86,7 +85,13 @@ const GroupGodowns = ({
             <AccordionItem value={godown._id} className="border-b-0">
               <AccordionTrigger className="py-2">
                 <Warehouse className="h-3 w-3 mr-2 flex-shrink-0" />
-                <Link href={`/${godown._id}`} aria-disabled={godown.items?.length ? true : false} className="truncate w-full text-left">{godown.name}</Link>
+                <Link
+                  href={`/${godown._id}`}
+                  aria-disabled={godown.items?.length ? true : false}
+                  className="truncate w-full text-left"
+                >
+                  {godown.name}
+                </Link>
               </AccordionTrigger>
               <AccordionContent className="pl-4">
                 {godown.children.length > 0 && (
@@ -122,6 +127,8 @@ export default function Sidebar() {
   useEffect(() => {
     groupGodown();
   }, [godowns, groupGodown]);
+  
+  console.log(groupedGodowns)
 
   useEffect(() => {
     try {
@@ -137,10 +144,8 @@ export default function Sidebar() {
 
   return (
     <div className="bg-background border-r h-custom">
-      <ScrollArea className="h-custom">
-        <div className="p-2">
-          <GroupGodowns groupedGodowns={groupedGodowns} />
-        </div>
+      <ScrollArea className="h-custom p-2">
+        <GroupGodowns groupedGodowns={groupedGodowns} />
       </ScrollArea>
     </div>
   );

@@ -1,18 +1,22 @@
 "use server"
 import Godown from "@/models/Godown";
 
-export const createNewGodown = async (name: string, parentGodown?: string) => {
+type FormData = {
+  name: string;
+  parent_godown?: string;
+}
+
+export const createNewGodown = async (formData: FormData) => {
   try {
-    const godownExists = await Godown.findOne({ name });
+    const godownExists = await Godown.findOne({ name: formData.name });
     
     if (godownExists) {
       return "Godown already exists";
     }
     
-    const godown = new Godown({
-      name,
-      parentGodown: parentGodown?.substring(0, 24) || null,
-    });
+    console.log("formData ", formData)
+    
+    const godown = new Godown(formData);
     await godown.save();
     return "success";
   } catch (error) {
