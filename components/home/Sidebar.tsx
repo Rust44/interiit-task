@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Warehouse } from "lucide-react";
+import Link from "next/link";
 
 type Godown = {
   _id: string;
@@ -23,11 +24,15 @@ export default function Sidebar(width?: string | number) {
   };
 
   useEffect(() => {
-    fetch("/api/getAllGodowns")
-      .then((res) => res.json())
-      .then((data) => {
-        setGodowns(data);
-      });
+    try {
+      fetch("/api/getAllGodowns")
+          .then((res) => res.json())
+          .then((data) => {
+            setGodowns(data);
+          });
+    } catch (err) {
+      console.log(err)
+    }
   }, []);
 
   return (
@@ -35,7 +40,8 @@ export default function Sidebar(width?: string | number) {
       <ScrollArea className="h-custom">
         <div className="p-2">
           {godowns.map((godown) => (
-            <button
+            <Link
+              href={`/${godown._id}`}
               key={godown._id}
               className={`flex items-center w-full py-2 px-3 text-left hover:bg-accent rounded-md transition-colors ${
                 selectedGodownId === godown._id ? "bg-accent" : ""
@@ -44,7 +50,7 @@ export default function Sidebar(width?: string | number) {
             >
               <Warehouse className="h-4 w-4 mr-2 flex-shrink-0" />
               <span className="truncate">{godown.name}</span>
-            </button>
+            </Link>
           ))}
         </div>
       </ScrollArea>

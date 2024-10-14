@@ -1,23 +1,46 @@
+"use client";
 import ItemCard from "@/components/home/ItemCard";
-import { getItemByGodownId } from "@/actions/itemAction";
+import { useState, useEffect, useCallback } from "react";
 
-export default async function GodownItems({
+type Item = {
+  _id: string;
+  name: string;
+  quantity: number;
+  category: string;
+  price: number;
+  status: string;
+  godown_id: string;
+  brand: string;
+  attributes: Record<string, string | number | boolean>;
+  image_url: string;
+};
+
+export default function GodownItems({
   params,
 }: {
   params: { godownId: string };
 }) {
-  const items = await getItemByGodownId(params.godownId);
-  
-  console.log("items ", items);
+  const [items, setItems] = useState<Item[]>([]);
+
+  const getItems = useCallback(async () => {
+    const res = await fetch(`/api/items/${params.godownId}`);
+
+    if (res.ok) {
+      const data = await res.json();
+      setItems(data);
+    } else {
+      console.error("Failed to fetch items");
+    }
+  }, [params.godownId]);
+
+  useEffect(() => {
+    getItems();
+  }, [getItems]);
 
   return (
     <>
-      <div className="container mx-auto py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {items.map((item) => (
-            <ItemCard key={item.item_id} item={item} />
-          ))}
-        </div>
+      <div className="container ">
+        <ItemCard items={items} />
       </div>
     </>
   );
