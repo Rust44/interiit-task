@@ -1,8 +1,15 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Warehouse } from "lucide-react";
 import Link from "next/link";
+
+type groupGodownType = {
+  _id: string;
+  name: string;
+  parent_godown: string | null;
+  children?: groupGodownType[];
+};
 
 type Godown = {
   _id: string;
@@ -10,8 +17,42 @@ type Godown = {
   parent_godown: string | null;
 };
 
-export default function Sidebar(width?: string | number) {
+export default function Sidebar() {
   const [godowns, setGodowns] = useState<Godown[]>([]);
+
+  const [groupedGodowns, setGroupedGodowns] = useState<Godown[]>([]);
+
+  const groupGodown = useCallback(() => {
+    const groupGodowns: groupGodownType[] = [];
+
+    godowns.forEach((godown) => {
+      if (godown.parent_godown === null) {
+        groupGodowns.push(godown);
+      }
+    });
+
+    godowns.forEach((godown) => {
+      if (godown.parent_godown !== null) {
+        const parentGodown = groupGodowns.find(
+          (g) => g._id === godown.parent_godown,
+        );
+        if (parentGodown) {
+          if (!parentGodown.children) {
+            parentGodown.children = [];
+          }
+          parentGodown.children.push(godown);
+        }
+      }
+    });
+
+    console.log("grouped godown ", groupGodowns);
+
+    setGroupedGodowns(groupedGodowns);
+  }, [godowns]);
+
+  useEffect(() => {
+    groupGodown();
+  }, [godowns, groupGodown]);
 
   const [selectedGodownId, setSelectedGodownId] = useState<string | null>(null);
 
@@ -19,24 +60,20 @@ export default function Sidebar(width?: string | number) {
     setSelectedGodownId(godown._id);
   };
 
-  const sidebarStyle = {
-    width: width ? (typeof width === "number" ? `${width}px` : width) : "256px",
-  };
-
   useEffect(() => {
     try {
       fetch("/api/getAllGodowns")
-          .then((res) => res.json())
-          .then((data) => {
-            setGodowns(data);
-          });
+        .then((res) => res.json())
+        .then((data) => {
+          setGodowns(data);
+        });
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
   }, []);
 
   return (
-    <div className="bg-background border-r h-custom duration-200 transition-all max-w-[400px] min-w-[200px]" style={sidebarStyle}>
+    <div className="bg-background border-r h-custom">
       <ScrollArea className="h-custom">
         <div className="p-2">
           {godowns.map((godown) => (

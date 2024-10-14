@@ -39,7 +39,7 @@ export default function GodownItems({
 
   return (
     <>
-      <div className="container ">
+      <div className="container max-w-screen-2xl m-auto">
         <ItemCard items={items} />
       </div>
     </>

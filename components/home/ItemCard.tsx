@@ -31,7 +31,7 @@ const ProductCard = ({ items }: CardProps) => {
               <CardTitle className="text-lg font-bold">{item.name}</CardTitle>
               <Badge
                 variant={
-                  item.status === "out_of_stock" ? "destructive" : "default"
+                  item.status === "out_of_stock" ? "secondary" : "default"
                 }
               >
                 {item.status === "out_of_stock" ? "Out of Stock" : "In Stock"}
@@ -59,7 +59,9 @@ const ProductCard = ({ items }: CardProps) => {
                 {Object.entries(item.attributes).map(([key, value]) => (
                   <React.Fragment key={key}>
                     <div className="capitalize">{key}:</div>
-                    <div>{value}</div>
+                    <div>
+                      {typeof value !== "boolean" ? value : value.toString()}
+                    </div>
                   </React.Fragment>
                 ))}
               </div>
