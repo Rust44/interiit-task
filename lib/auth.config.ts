@@ -1,6 +1,6 @@
 import { saltAndHashPassword } from "@/utils/password";
 import client from "@/lib/mongodb";
-import LinkedIn from "next-auth/providers/linkedin";
+import Github from "next-auth/providers/github"
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import { NextAuthConfig } from "next-auth";
@@ -10,20 +10,7 @@ const authRoutes = ["/signin", "/signup"];
 
 const authConfig = {
   providers: [
-    LinkedIn({
-      allowDangerousEmailAccountLinking: true,
-      profile(profile) {
-        console.log("profile ", profile);
-        return {
-          name: profile.name,
-          email: profile.email,
-          image: profile.picture,
-          firstName: profile.given_name,
-          lastName: profile.family_name,
-          emailVerified: profile.email_verified,
-        };
-      },
-    }),
+    Github,
     Google({
       allowDangerousEmailAccountLinking: true,
       profile(profile) {
