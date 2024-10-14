@@ -5,7 +5,7 @@ interface ItemDocument extends mongoose.Document {
   quantity: number;
   category: string;
   price: number;
-  status: string;
+  status: "in_stock" | "out_of_stock"; // Restricting status to specific values
   godown_id: mongoose.Schema.Types.ObjectId;
   brand: string;
   image_url: string;
@@ -17,15 +17,21 @@ const itemSchema = new mongoose.Schema<ItemDocument>({
   quantity: { type: Number, required: true },
   category: { type: String, required: true },
   price: { type: Number, required: true },
-  status: { type: String, required: true },
+  status: {
+    type: String,
+    required: true,
+    enum: ["in_stock", "out_of_stock"], 
+  },
   godown_id: { type: mongoose.Schema.Types.ObjectId, ref: "Godown" },
   brand: { type: String, required: true },
   image_url: { type: String, required: true },
   attributes: {
     type: Map,
-    of: mongoose.Schema.Types.Mixed,
+    of: mongoose.Schema.Types.Mixed
   },
 });
 
-export default mongoose.models.Item ||
-  mongoose.model<ItemDocument>("Item", itemSchema);
+const ItemModel =
+  mongoose.models.Item || mongoose.model<ItemDocument>("Item", itemSchema);
+
+export default ItemModel;
