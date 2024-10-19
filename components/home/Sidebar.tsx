@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Warehouse, Kanban } from "lucide-react";
 import Link from "next/link";
@@ -31,46 +31,6 @@ type Godown = {
   items?: Item[] | undefined;
 };
 
-const findAndAddGodown = (
-  godown: Godown,
-  newGroupedGodowns: groupGodownType[],
-) => {
-  for (let i = 0; i < newGroupedGodowns.length; i++) {
-    if (godown.parent_godown === newGroupedGodowns[i]._id) {
-      newGroupedGodowns[i].children?.push({
-        _id: godown._id,
-        name: godown.name,
-        parent_godown: godown.parent_godown,
-        items: godown.items,
-        children: [],
-      });
-      return;
-    } else if (newGroupedGodowns[i].children?.length > 0) {
-      findAndAddGodown(godown, newGroupedGodowns[i].children);
-    }
-  }
-};
-
-const getGroupedGodown = (godowns: Godown[]) => {
-  const newGroupedGodowns: groupGodownType[] = [];
-
-  for (let i = 0; i < godowns.length; i++) {
-    const godown = godowns[i];
-    if (godown.parent_godown === null) {
-      newGroupedGodowns.push({
-        _id: godown._id,
-        name: godown.name,
-        parent_godown: godown.parent_godown,
-        items: godown.items,
-        children: [],
-      });
-    } else {
-      findAndAddGodown(godown, newGroupedGodowns);
-    }
-  }
-
-  return newGroupedGodowns;
-};
 
 const GroupGodowns = ({
   groupedGodowns,
@@ -118,17 +78,51 @@ const GroupGodowns = ({
 export default function Sidebar() {
   const [godowns, setGodowns] = useState<Godown[]>([]);
 
-  const [groupedGodowns, setGroupedGodowns] = useState<groupGodownType[]>([]);
+  const groupedGodowns = useMemo(() => {
 
-  const groupGodown = useCallback(() => {
-    setGroupedGodowns(getGroupedGodown(godowns));
-  }, [godowns]);
+    const findAndAddGodown = (
+      godown: Godown,
+      newGroupedGodowns: groupGodownType[],
+    ) => {
+      for (let i = 0; i < newGroupedGodowns.length; i++) {
+        if (godown.parent_godown === newGroupedGodowns[i]._id) {
+          newGroupedGodowns[i].children?.push({
+            _id: godown._id,
+            name: godown.name,
+            parent_godown: godown.parent_godown,
+            items: godown.items,
+            children: [],
+          });
+          return;
+        } else if (newGroupedGodowns[i].children?.length > 0) {
+          findAndAddGodown(godown, newGroupedGodowns[i].children);
+        }
+      }
+    }
 
-  useEffect(() => {
-    groupGodown();
-  }, [godowns, groupGodown]);
-  
-  console.log(groupedGodowns)
+    const getGroupedGodown = (godowns: Godown[]) => {
+      const newGroupedGodowns: groupGodownType[] = [];
+
+      for (let i = 0; i < godowns.length; i++) {
+        const godown = godowns[i];
+        if (godown.parent_godown === null) {
+          newGroupedGodowns.push({
+            _id: godown._id,
+            name: godown.name,
+            parent_godown: godown.parent_godown,
+            items: godown.items,
+            children: [],
+          });
+        } else {
+          findAndAddGodown(godown, newGroupedGodowns);
+        }
+      }
+
+      return newGroupedGodowns;
+    };
+
+    return getGroupedGodown(godowns);
+  }, [godowns])
 
   useEffect(() => {
     try {
